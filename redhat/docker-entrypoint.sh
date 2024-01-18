@@ -32,9 +32,9 @@ deployment:
 _EOC_
       else
           # updating config.yaml for standalone mode
-          sed -i 's/role: traditional/role: data_plane/' ${PREFIX}/conf/config.yaml
-          sed -i 's/role_traditional:/role_data_plane:/' ${PREFIX}/conf/config.yaml
-          sed -i 's/config_provider: etcd/config_provider: yaml/' ${PREFIX}/conf/config.yaml
+          echo "$(sed 's/role: traditional/role: data_plane/g' ${PREFIX}/conf/config.yaml)" > ${PREFIX}/conf/config.yaml
+          echo "$(sed 's/role_traditional:/role_data_plane:/g' ${PREFIX}/conf/config.yaml)" > ${PREFIX}/conf/config.yaml
+          echo "$(sed 's/config_provider: etcd/config_provider: yaml/g' ${PREFIX}/conf/config.yaml)" > ${PREFIX}/conf/config.yaml
       fi
 
         if [ ! -f "${PREFIX}/conf/apisix.yaml" ]; then
@@ -53,6 +53,10 @@ _EOC_
     # For versions below 3.5.0 whose conf_server has not been removed.
     if [ -e "/usr/local/apisix/conf/config_listen.sock" ]; then
         rm -f "/usr/local/apisix/conf/config_listen.sock"
+    fi
+
+    if [ -e "/usr/local/apisix/logs/worker_events.sock" ]; then
+        rm -f "/usr/local/apisix/logs/worker_events.sock"
     fi
     
     exec /usr/local/openresty/bin/openresty -p /usr/local/apisix -g 'daemon off;'

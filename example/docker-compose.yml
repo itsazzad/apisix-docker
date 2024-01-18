@@ -29,7 +29,7 @@ services:
       apisix:
 
   apisix:
-    image: apache/apisix:${APISIX_IMAGE_TAG:-3.7.0-debian}
+    image: apache/apisix:${APISIX_IMAGE_TAG:-3.8.0-debian}
     restart: always
     volumes:
       - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
@@ -46,7 +46,7 @@ services:
       apisix:
 
   etcd:
-    image: bitnami/etcd:3.4.15  #3.4.28
+    image: bitnami/etcd:3.5.11
     restart: always
     volumes:
       - etcd_data:/bitnami/etcd
@@ -61,7 +61,7 @@ services:
       apisix:
 
   web1:
-    image: nginx:1.19.0-alpine  #1.25.3-alpine
+    image: nginx:1.19.0-alpine
     restart: always
     volumes:
       - ./upstream/web1.conf:/etc/nginx/nginx.conf
@@ -73,7 +73,7 @@ services:
       apisix:
 
   web2:
-    image: nginx:1.19.0-alpine  #1.25.3-alpine
+    image: nginx:1.19.0-alpine
     restart: always
     volumes:
       - ./upstream/web2.conf:/etc/nginx/nginx.conf
@@ -85,7 +85,7 @@ services:
       apisix:
 
   prometheus:
-    image: prom/prometheus:v2.25.0  #2.45.2
+    image: prom/prometheus:v2.25.0
     restart: always
     volumes:
       - ./prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
@@ -95,7 +95,7 @@ services:
       apisix:
 
   grafana:
-    image: grafana/grafana:7.3.7  #10.2.3
+    image: grafana/grafana:7.3.7
     restart: always
     ports:
       - "3000:3000"
