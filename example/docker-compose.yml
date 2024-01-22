@@ -18,21 +18,25 @@
 version: "3"
 
 services:
-  apisix-dashboard:
-    image: apache/apisix-dashboard:3.0.1-alpine
-    restart: always
-    volumes:
-    - ./dashboard_conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
-    ports:
-    - "9000:9000"
-    networks:
-      apisix:
+  # apisix-dashboard:
+  #   image: apache/apisix-dashboard:3.0.1-alpine
+  #   restart: always
+  #   volumes:
+  #   - ./dashboard_conf/conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+  #   ports:
+  #   - "9000:9000"
+  #   networks:
+  #     apisix:
 
   apisix:
+    build: 
+      context: ../../apisix-javascript-plugin-runner
     image: apache/apisix:${APISIX_IMAGE_TAG:-3.8.0-debian}
     restart: always
     volumes:
-      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ../../apisix-javascript-plugin-runner/examples/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ../../apisix-javascript-plugin-runner/examples:/usr/local/apisix/javascript-plugin-runner/examples
+      # - ../../apisix-javascript-plugin-runner:/usr/local/apisix/javascript-plugin-runner
     depends_on:
       - etcd
     ##network_mode: host
@@ -60,51 +64,51 @@ services:
     networks:
       apisix:
 
-  web1:
-    image: nginx:1.19.0-alpine
-    restart: always
-    volumes:
-      - ./upstream/web1.conf:/etc/nginx/nginx.conf
-    ports:
-      - "9081:80/tcp"
-    environment:
-      - NGINX_PORT=80
-    networks:
-      apisix:
+  # web1:
+  #   image: nginx:1.19.0-alpine
+  #   restart: always
+  #   volumes:
+  #     - ./upstream/web1.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - "9081:80/tcp"
+  #   environment:
+  #     - NGINX_PORT=80
+  #   networks:
+  #     apisix:
 
-  web2:
-    image: nginx:1.19.0-alpine
-    restart: always
-    volumes:
-      - ./upstream/web2.conf:/etc/nginx/nginx.conf
-    ports:
-      - "9082:80/tcp"
-    environment:
-      - NGINX_PORT=80
-    networks:
-      apisix:
+  # web2:
+  #   image: nginx:1.19.0-alpine
+  #   restart: always
+  #   volumes:
+  #     - ./upstream/web2.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - "9082:80/tcp"
+  #   environment:
+  #     - NGINX_PORT=80
+  #   networks:
+  #     apisix:
 
-  prometheus:
-    image: prom/prometheus:v2.25.0
-    restart: always
-    volumes:
-      - ./prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      apisix:
+  # prometheus:
+  #   image: prom/prometheus:v2.25.0
+  #   restart: always
+  #   volumes:
+  #     - ./prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   ports:
+  #     - "9090:9090"
+  #   networks:
+  #     apisix:
 
-  grafana:
-    image: grafana/grafana:7.3.7
-    restart: always
-    ports:
-      - "3000:3000"
-    volumes:
-      - "./grafana_conf/provisioning:/etc/grafana/provisioning"
-      - "./grafana_conf/dashboards:/var/lib/grafana/dashboards"
-      - "./grafana_conf/config/grafana.ini:/etc/grafana/grafana.ini"
-    networks:
-      apisix:
+  # grafana:
+  #   image: grafana/grafana:7.3.7
+  #   restart: always
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - "./grafana_conf/provisioning:/etc/grafana/provisioning"
+  #     - "./grafana_conf/dashboards:/var/lib/grafana/dashboards"
+  #     - "./grafana_conf/config/grafana.ini:/etc/grafana/grafana.ini"
+  #   networks:
+  #     apisix:
 
 networks:
   apisix:
